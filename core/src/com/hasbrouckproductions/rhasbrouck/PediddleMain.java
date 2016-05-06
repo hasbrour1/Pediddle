@@ -28,6 +28,7 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture customRoad;
 	private Texture sportCar;
 	private Texture taxiImage;
+	private Texture explosionImage;
 
 	private Sound carSound;
 	private Sprite roadSprite;
@@ -49,6 +50,7 @@ public class PediddleMain extends ApplicationAdapter {
 	private long lastCarTime;
 	private long lastTaxiTime;
 
+	private State state = State.RUN;
 
 	@Override
 	public void create () {
@@ -58,6 +60,7 @@ public class PediddleMain extends ApplicationAdapter {
 		customRoad = new Texture(Gdx.files.internal("roadcustom.png"));
 		sportCar = new Texture(Gdx.files.internal("Car.png"));
 		taxiImage = new Texture(Gdx.files.internal("taxi.png"));
+		explosionImage = new Texture(Gdx.files.internal("explosion.png"));
 
 		sportSprite = new Sprite(sportCar);
 		sportSprite.setSize(120, 120);
@@ -100,100 +103,145 @@ public class PediddleMain extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		//render car
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		camera.update();
+		switch(state){
+			case RUN:
+				//render car
+				Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//use coodinate system defined in camera
-		batch.setProjectionMatrix(camera.combined);
+				camera.update();
 
-		//start rendering opjects
-		batch.begin();
+				//use coodinate system defined in camera
+				batch.setProjectionMatrix(camera.combined);
 
-
-
-		batch.draw(customRoad, 0, 0);
-		for(Rectangle road: roads){
-			roadSprite.setX(road.x);
-			roadSprite.setY(road.y);
-			roadSprite.draw(batch);
-		}
-		for(Rectangle road: roads2){
-			roadSprite.setX(590);
-			roadSprite.setY(road.y);
-			roadSprite.draw(batch);
-		}
-		for(Rectangle car: cars){
-			sportSprite.setX(car.x);
-			sportSprite.setY(car.y);
-			sportSprite.draw(batch);
-		}
-		for(Rectangle taxi: taxis){
-			taxiSprite.setX(taxi.x);
-			taxiSprite.setY(taxi.y);
-			taxiSprite.draw(batch);
-		}
-
-		batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
-
-		batch.end();
-
-		//main car movement
-		if(Gdx.input.isTouched()){
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			mainCar.x = touchPos.x - 64/2;
-		}
-
-		//have car stay between road
-		if(mainCar.x < 460) mainCar.x = 460;
-		if(mainCar.x > 640) mainCar.x = 640;
+				//start rendering opjects
+				batch.begin();
 
 
-		//road spawn
-		if(TimeUtils.nanoTime() - lastRoadTime > 1000000000 / 2) spawnRoad();
 
-		if(TimeUtils.nanoTime() - lastCarTime > 1000000000 * 2) spawnCar();
+				batch.draw(customRoad, 0, 0);
+				for(Rectangle road: roads){
+					roadSprite.setX(road.x);
+					roadSprite.setY(road.y);
+					roadSprite.draw(batch);
+				}
+				for(Rectangle road: roads2){
+					roadSprite.setX(590);
+					roadSprite.setY(road.y);
+					roadSprite.draw(batch);
+				}
+				for(Rectangle car: cars){
+					sportSprite.setX(car.x);
+					sportSprite.setY(car.y);
+					sportSprite.draw(batch);
+				}
+				for(Rectangle taxi: taxis){
+					taxiSprite.setX(taxi.x);
+					taxiSprite.setY(taxi.y);
+					taxiSprite.draw(batch);
+				}
 
-		if(TimeUtils.nanoTime() - lastTaxiTime > 1000000000 * 1.5) spawnTaxi();
+				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
 
-		Iterator<Rectangle> iter = roads.iterator();
-		while(iter.hasNext()){
-			Rectangle road = iter.next();
-			road.y -= 200 * Gdx.graphics.getDeltaTime();
-			if(road.y + 601 < 0){
-				iter.remove();
-			}
-		}
+				batch.end();
 
-		Iterator<Rectangle> iter2 = roads2.iterator();
-		while(iter2.hasNext()){
-			Rectangle road = iter2.next();
-			road.y -= 200 * Gdx.graphics.getDeltaTime();
-			if(road.y + 601 < 0){
-				iter2.remove();
-			}
-		}
+				//main car movement
+				if(Gdx.input.isTouched()){
+					Vector3 touchPos = new Vector3();
+					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+					camera.unproject(touchPos);
+					mainCar.x = touchPos.x - 64/2;
+				}
 
-		Iterator<Rectangle> iter3 = cars.iterator();
-		while(iter3.hasNext()){
-			Rectangle car = iter3.next();
-			car.y -= 300 *(Gdx.graphics.getDeltaTime());
-			if(car.y + 200 < 0)iter3.remove();
-		}
+				//have car stay between road
+				if(mainCar.x < 460) mainCar.x = 460;
+				if(mainCar.x > 640) mainCar.x = 640;
 
-		Iterator<Rectangle> iter4 = taxis.iterator();
-		while(iter4.hasNext()){
-			Rectangle taxi = iter4.next();
-			taxi.y -= 250 * (Gdx.graphics.getDeltaTime());
-			if(taxi.y + 200 < 0)iter4.remove();
-			if(taxi.overlaps(mainCar)){
-				//crash
-				iter4.remove();
-			}
+
+				//road spawn
+				if(TimeUtils.nanoTime() - lastRoadTime > 1000000000 / 2) spawnRoad();
+
+				if(TimeUtils.nanoTime() - lastCarTime > 1000000000 * 2) spawnCar();
+
+				if(TimeUtils.nanoTime() - lastTaxiTime > 1000000000 * 1.5) spawnTaxi();
+
+				Iterator<Rectangle> iter = roads.iterator();
+				while(iter.hasNext()){
+					Rectangle road = iter.next();
+					road.y -= 200 * Gdx.graphics.getDeltaTime();
+					if(road.y + 601 < 0){
+						iter.remove();
+					}
+				}
+
+				Iterator<Rectangle> iter2 = roads2.iterator();
+				while(iter2.hasNext()){
+					Rectangle road = iter2.next();
+					road.y -= 200 * Gdx.graphics.getDeltaTime();
+					if(road.y + 601 < 0){
+						pause();
+					}
+				}
+
+				Iterator<Rectangle> iter3 = cars.iterator();
+				while(iter3.hasNext()){
+					Rectangle car = iter3.next();
+					car.y -= 300 *(Gdx.graphics.getDeltaTime());
+					if(car.y + 200 < 0)iter3.remove();
+				}
+
+				Iterator<Rectangle> iter4 = taxis.iterator();
+				while(iter4.hasNext()){
+					Rectangle taxi = iter4.next();
+					taxi.y -= 250 * (Gdx.graphics.getDeltaTime());
+					if(taxi.y + 200 < 0)iter4.remove();
+					if(taxi.overlaps(mainCar)){
+						//crash
+						state = State.CRASH;
+					}
+				}
+				break;
+			case CRASH:
+
+				camera.update();
+
+				//use coodinate system defined in camera
+				batch.setProjectionMatrix(camera.combined);
+
+				//start rendering opjects
+				batch.begin();
+
+
+
+				batch.draw(customRoad, 0, 0);
+				for(Rectangle road: roads){
+					roadSprite.setX(road.x);
+					roadSprite.setY(road.y);
+					roadSprite.draw(batch);
+				}
+				for(Rectangle road: roads2){
+					roadSprite.setX(590);
+					roadSprite.setY(road.y);
+					roadSprite.draw(batch);
+				}
+				for(Rectangle car: cars){
+					sportSprite.setX(car.x);
+					sportSprite.setY(car.y);
+					sportSprite.draw(batch);
+				}
+				for(Rectangle taxi: taxis){
+					taxiSprite.setX(taxi.x);
+					taxiSprite.setY(taxi.y);
+					taxiSprite.setTexture(explosionImage);
+					taxiSprite.draw(batch);
+				}
+
+				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
+
+				batch.end();
+
+				break;
 		}
 	}
 
@@ -234,8 +282,8 @@ public class PediddleMain extends ApplicationAdapter {
 			taxi.x = 480;
 		}
 		taxi.y = 600;
-		taxi.width = 120;
-		taxi.height = 60;
+		taxi.width = 60;
+		taxi.height = 120;
 		taxis.add(taxi);
 		lastTaxiTime = TimeUtils.nanoTime();
 	}
@@ -247,5 +295,12 @@ public class PediddleMain extends ApplicationAdapter {
 		roadImage.dispose();
 		carSound.dispose();
 		batch.dispose();
+	}
+
+	public enum State{
+		PAUSE,
+		RUN,
+		CRASH,
+		STOPPED
 	}
 }
