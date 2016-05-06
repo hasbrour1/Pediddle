@@ -23,6 +23,7 @@ public class PediddleMain extends ApplicationAdapter {
 	//Asset import
 	private Texture audiImage;
 	private Texture roadImage;
+	private Texture customRoad;
 	private Sound carSound;
 	private Sprite roadSprite;
 
@@ -33,17 +34,17 @@ public class PediddleMain extends ApplicationAdapter {
 	private Rectangle mainCar;
 
 	private Array<Rectangle> roads;
+	private Array<Rectangle> roads2;
 	private long lastRoadTime;
+
 
 	@Override
 	public void create () {
 		//load images
 		audiImage = new Texture(Gdx.files.internal("Audi.png"));
-		roadImage = new Texture(Gdx.files.internal("road.png"));
+		roadImage = new Texture(Gdx.files.internal("roadmarker.png"));
+		customRoad = new Texture(Gdx.files.internal("roadcustom.png"));
 		roadSprite = new Sprite(roadImage);
-		roadSprite.setPosition(0, 0);
-		roadSprite.setRotation(-90);
-
 
 		//load car sound
 		carSound = Gdx.audio.newSound(Gdx.files.internal("car-motor.wav"));
@@ -65,6 +66,7 @@ public class PediddleMain extends ApplicationAdapter {
 		mainCar.height = 120;
 
 		roads = new Array<Rectangle>();
+		roads2 = new Array<Rectangle>();
 		spawnRoad();
 	}
 
@@ -82,8 +84,14 @@ public class PediddleMain extends ApplicationAdapter {
 		//start rendering opjects
 		batch.begin();
 
+		batch.draw(customRoad, 0, 0);
 		for(Rectangle road: roads){
 			roadSprite.setX(road.x);
+			roadSprite.setY(road.y);
+			roadSprite.draw(batch);
+		}
+		for(Rectangle road: roads2){
+			roadSprite.setX(590);
 			roadSprite.setY(road.y);
 			roadSprite.draw(batch);
 		}
@@ -100,29 +108,41 @@ public class PediddleMain extends ApplicationAdapter {
 		}
 
 		//have car stay between road
-		if(mainCar.x < 130) mainCar.x = 130;
-		if(mainCar.x > 280) mainCar.x = 280;
+		if(mainCar.x < 460) mainCar.x = 460;
+		if(mainCar.x > 640) mainCar.x = 640;
 
 
 		//road spawn
+		if(TimeUtils.nanoTime() - lastRoadTime > 1000000000 / 2) spawnRoad();
+
 		Iterator<Rectangle> iter = roads.iterator();
 		while(iter.hasNext()){
 			Rectangle road = iter.next();
 			road.y -= 200 * Gdx.graphics.getDeltaTime();
 			if(road.y + 601 < 0){
 				iter.remove();
-				spawnRoad();
+			}
+		}
+
+		Iterator<Rectangle> iter2 = roads2.iterator();
+		while(iter2.hasNext()){
+			Rectangle road = iter2.next();
+			road.y -= 200 * Gdx.graphics.getDeltaTime();
+			if(road.y + 601 < 0){
+				iter2.remove();
 			}
 		}
 	}
 
 	public void spawnRoad(){
 		Rectangle road = new Rectangle();
-		road.x = 0;
-		road.y = 601;
-		road.width = 64;
-		road.height = 64;
+		road.x = 210;
+		road.y = 480;
+		road.width = 19;
+		road.height = 39;
 		roads.add(road);
+		roads2.add(road);
+		lastRoadTime = TimeUtils.nanoTime();
 	}
 
 	@Override
