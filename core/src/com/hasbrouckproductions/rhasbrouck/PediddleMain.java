@@ -30,7 +30,9 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture taxiImage;
 	private Texture explosionImage;
 
+	private Sound crashSound;
 	private Sound carSound;
+
 	private Sprite roadSprite;
 	private Sprite sportSprite;
 	private Sprite taxiSprite;
@@ -75,9 +77,10 @@ public class PediddleMain extends ApplicationAdapter {
 
 		//load car sound
 		carSound = Gdx.audio.newSound(Gdx.files.internal("car-motor.wav"));
+		crashSound = Gdx.audio.newSound(Gdx.files.internal("car-crash.wav"));
 
 		//play music in background
-		carSound.setLooping(0, true);
+		carSound.loop();
 		carSound.play();
 
 		//config camera
@@ -99,6 +102,8 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnRoad();
 		spawnCar();
 		spawnTaxi();
+
+		state = State.RUN;
 	}
 
 	@Override
@@ -198,6 +203,7 @@ public class PediddleMain extends ApplicationAdapter {
 					if(taxi.y + 200 < 0)iter4.remove();
 					if(taxi.overlaps(mainCar)){
 						//crash
+						crashSound.play();
 						state = State.CRASH;
 					}
 				}
@@ -240,6 +246,11 @@ public class PediddleMain extends ApplicationAdapter {
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
 				batch.end();
+
+				//if screen it touched, relaunch from beginning
+				if(Gdx.input.isTouched()){
+					create();
+				}
 
 				break;
 		}
