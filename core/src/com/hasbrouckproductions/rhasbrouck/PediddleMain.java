@@ -81,7 +81,6 @@ public class PediddleMain extends ApplicationAdapter {
 
 		//play music in background
 		carSound.loop();
-		carSound.play();
 
 		//config camera
 		camera = new OrthographicCamera();
