@@ -122,8 +122,6 @@ public class PediddleMain extends ApplicationAdapter {
 				//start rendering opjects
 				batch.begin();
 
-
-
 				batch.draw(customRoad, 0, 0);
 				for(Rectangle road: roads){
 					roadSprite.setX(road.x);
@@ -184,7 +182,7 @@ public class PediddleMain extends ApplicationAdapter {
 					Rectangle road = iter2.next();
 					road.y -= 200 * Gdx.graphics.getDeltaTime();
 					if(road.y + 601 < 0){
-						pause();
+						iter2.remove();
 					}
 				}
 
@@ -211,13 +209,11 @@ public class PediddleMain extends ApplicationAdapter {
 
 				camera.update();
 
-				//use coodinate system defined in camera
+				//use coordinate system defined in camera
 				batch.setProjectionMatrix(camera.combined);
 
-				//start rendering opjects
+				//start rendering objects
 				batch.begin();
-
-
 
 				batch.draw(customRoad, 0, 0);
 				for(Rectangle road: roads){
