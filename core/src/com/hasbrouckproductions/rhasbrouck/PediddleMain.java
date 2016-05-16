@@ -31,6 +31,9 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture taxiImage;
 	private Texture viperImage;
 	private Texture explosionImage;
+	private Texture ambulanceImage;
+	private Texture truckImage;
+	private Texture policeImage;
 
 	private Sound crashSound;
 	private Music drivingMusic;
@@ -39,6 +42,9 @@ public class PediddleMain extends ApplicationAdapter {
 	private Sprite sportSprite;
 	private Sprite taxiSprite;
 	private Sprite viperSprite;
+	private Sprite ambulanceSprite;
+	private Sprite policeSprite;
+	private Sprite truckSprite;
 
 	//Camera and Sprite Batch
 	private SpriteBatch batch;
@@ -49,9 +55,9 @@ public class PediddleMain extends ApplicationAdapter {
 	private Array<Rectangle> roads;
 	private Array<Rectangle> roads2;
 	private Array<Rectangle> cars;
-	private Array<Rectangle> taxis;
 
-	private ArrayList<Car> carArray;
+	private ArrayList<Car> leftLaneArray;
+	private ArrayList<Car> rightLaneArray;
 
 	private long lastRoadTime;
 	private long lastCarTime;
@@ -68,6 +74,9 @@ public class PediddleMain extends ApplicationAdapter {
 		sportCar = new Texture(Gdx.files.internal("Car.png"));
 		taxiImage = new Texture(Gdx.files.internal("taxi.png"));
 		viperImage = new Texture(Gdx.files.internal("Black_viper.png"));
+		ambulanceImage = new Texture(Gdx.files.internal("Ambulance.png"));
+		truckImage = new Texture(Gdx.files.internal("Mini_truck.png"));
+		policeImage = new Texture(Gdx.files.internal("Police.png"));
 		explosionImage = new Texture(Gdx.files.internal("explosion.png"));
 
 		sportSprite = new Sprite(sportCar);
@@ -81,12 +90,25 @@ public class PediddleMain extends ApplicationAdapter {
 		viperSprite = new Sprite(viperImage);
 		viperSprite.setSize(120,120);
 
+		ambulanceSprite = new Sprite(ambulanceImage);
+		ambulanceSprite.setSize(120, 120);
+		ambulanceSprite.setOrigin(0,0);
+		ambulanceSprite.setRotation(-180);
+
+		truckSprite = new Sprite(truckImage);
+		truckSprite.setSize(120, 120);
+		truckSprite.setOrigin(0,0);
+		truckSprite.setRotation(-180);
+
+		policeSprite = new Sprite(policeImage);
+		policeSprite.setSize(120, 120);
 
 		roadSprite = new Sprite(roadImage);
 
 
 		//create Car holder
-		carArray = new ArrayList<Car>();
+		leftLaneArray = new ArrayList<Car>();
+		rightLaneArray = new ArrayList<Car>();
 
 		//load car sound
 		drivingMusic = Gdx.audio.newMusic(Gdx.files.internal("driving_sound.mp3"));
@@ -110,10 +132,9 @@ public class PediddleMain extends ApplicationAdapter {
 		roads = new Array<Rectangle>();
 		roads2 = new Array<Rectangle>();
 		cars = new Array<Rectangle>();
-		taxis = new Array<Rectangle>();
 		spawnRoad();
-		spawnCar();
-		spawnTaxi();
+		spawnLeftLane();
+		spawnRightLane();
 
 		state = State.RUN;
 	}
@@ -146,15 +167,12 @@ public class PediddleMain extends ApplicationAdapter {
 					roadSprite.setY(road.y);
 					roadSprite.draw(batch);
 				}
-				for(Rectangle car: cars){
-					sportSprite.setX(car.x);
-					sportSprite.setY(car.y);
-					sportSprite.draw(batch);
+				for(Car car: rightLaneArray){
+					car.getCarSprite().setX(car.getX());
+					car.getCarSprite().setY(car.getY());
+					car.getCarSprite().draw(batch);
 				}//change this to cars
-				for(Car car: carArray){
-					//taxiSprite.setX(taxi.x);
-					//taxiSprite.setY(taxi.y);
-					//taxiSprite.draw(batch);
+				for(Car car: leftLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
@@ -180,9 +198,9 @@ public class PediddleMain extends ApplicationAdapter {
 				//road spawn
 				if(TimeUtils.nanoTime() - lastRoadTime > 1000000000 / 2) spawnRoad();
 
-				if(TimeUtils.nanoTime() - lastCarTime > 1000000000 * 2) spawnCar();
+				if(TimeUtils.nanoTime() - lastCarTime > 1000000000 * 2) spawnLeftLane();
 
-				if(TimeUtils.nanoTime() - lastTaxiTime > 1000000000 * 1.5) spawnTaxi();
+				if(TimeUtils.nanoTime() - lastTaxiTime > 1000000000 * 1.5) spawnRightLane();
 
 				Iterator<Rectangle> iter = roads.iterator();
 				while(iter.hasNext()){
@@ -202,14 +220,14 @@ public class PediddleMain extends ApplicationAdapter {
 					}
 				}
 
-				Iterator<Rectangle> iter3 = cars.iterator();
+				Iterator<Car> iter3 = rightLaneArray.iterator();
 				while(iter3.hasNext()){
 					Rectangle car = iter3.next();
 					car.y -= 300 *(Gdx.graphics.getDeltaTime());
 					if(car.y + 200 < 0)iter3.remove();
 				}
 
-				Iterator<Car> iter4 = carArray.iterator();
+				Iterator<Car> iter4 = leftLaneArray.iterator();
 				while(iter4.hasNext()){
 					Rectangle car = iter4.next();
 					car.y -= 250 * (Gdx.graphics.getDeltaTime());
@@ -242,15 +260,12 @@ public class PediddleMain extends ApplicationAdapter {
 					roadSprite.setY(road.y);
 					roadSprite.draw(batch);
 				}
-				for(Rectangle car: cars){
-					sportSprite.setX(car.x);
-					sportSprite.setY(car.y);
-					sportSprite.draw(batch);
-				}
-				for(Car car: carArray){
-					//taxiSprite.setX(taxi.x);
-					//taxiSprite.setY(taxi.y);
-					//taxiSprite.draw(batch);
+				for(Car car: rightLaneArray){
+					car.getCarSprite().setX(car.getX());
+					car.getCarSprite().setY(car.getY());
+					car.getCarSprite().draw(batch);
+				}//change this to cars
+				for(Car car: leftLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
@@ -280,8 +295,8 @@ public class PediddleMain extends ApplicationAdapter {
 		lastRoadTime = TimeUtils.nanoTime();
 	}
 
-	public void spawnCar(){
-		Rectangle car = new Rectangle();
+	public void spawnLeftLane(){
+		Car car = new Car();
 		//random side of road
 		//220 for left 350 for right
 		if(Math.random() >= 0.5){
@@ -290,14 +305,26 @@ public class PediddleMain extends ApplicationAdapter {
 			car.x = 350;
 		}
 		car.y = 600;
-		car.width = 120;
+		car.width = 60;
 		car.height = 120;
-		cars.add(car);
+
+		//set Image for car
+		double randResult = Math.random();
+		if(randResult <= 0.3){
+			car.setCarSprite(sportSprite);
+		}else if(randResult > 0.3 && randResult <= 0.7){
+			car.setCarSprite(truckSprite);
+		}else{
+			car.setCarSprite(ambulanceSprite);
+		}
+
+		rightLaneArray.add(car);
 		lastCarTime = TimeUtils.nanoTime();
 	}
 
-	public void spawnTaxi(){
+	public void spawnRightLane(){
 		Car car = new Car();
+
 		//random side of road
 		//right side 600 left 480
 		if(Math.random() >= 0.5){
@@ -310,13 +337,16 @@ public class PediddleMain extends ApplicationAdapter {
 		car.height = 120;
 
 		//set Image for car
-		if(Math.random() >= 0.5){
+		double randResult = Math.random();
+		if(randResult <= 0.3){
 			car.setCarSprite(viperSprite);
-		}else{
+		}else if(randResult > 0.3 && randResult <= 0.7){
 			car.setCarSprite(taxiSprite);
+		}else{
+			car.setCarSprite(policeSprite);
 		}
 
-		carArray.add(car);
+		leftLaneArray.add(car);
 		lastTaxiTime = TimeUtils.nanoTime();
 	}
 
