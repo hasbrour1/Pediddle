@@ -1,6 +1,7 @@
 package com.hasbrouckproductions.rhasbrouck;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -11,37 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 public class Car extends Rectangle {
 
-    private int xPos;
-    private int yPos;
-    private Texture carImage;
+    private Sprite carSprite;
 
-    public Car(int x, int y, Texture img){
-        xPos = x;
-        yPos = y;
-        carImage = img;
+    public Car(){
     }
 
-    public int getxPos() {
-        return xPos;
+    public Sprite getCarSprite() {
+        return carSprite;
     }
 
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
-    }
-
-    public int getyPos() {
-        return yPos;
-    }
-
-    public void setyPos(int yPos) {
-        this.yPos = yPos;
-    }
-
-    public Texture getCarImage() {
-        return carImage;
-    }
-
-    public void setCarImage(Texture carImage) {
-        this.carImage = carImage;
+    public void setCarSprite(Sprite carSprite) {
+        this.carSprite = carSprite;
     }
 }

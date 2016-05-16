@@ -1,5 +1,6 @@
 package com.hasbrouckproductions.rhasbrouck;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -28,6 +29,7 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture customRoad;
 	private Texture sportCar;
 	private Texture taxiImage;
+	private Texture viperImage;
 	private Texture explosionImage;
 
 	private Sound crashSound;
@@ -36,6 +38,7 @@ public class PediddleMain extends ApplicationAdapter {
 	private Sprite roadSprite;
 	private Sprite sportSprite;
 	private Sprite taxiSprite;
+	private Sprite viperSprite;
 
 	//Camera and Sprite Batch
 	private SpriteBatch batch;
@@ -47,6 +50,8 @@ public class PediddleMain extends ApplicationAdapter {
 	private Array<Rectangle> roads2;
 	private Array<Rectangle> cars;
 	private Array<Rectangle> taxis;
+
+	private ArrayList<Car> carArray;
 
 	private long lastRoadTime;
 	private long lastCarTime;
@@ -62,6 +67,7 @@ public class PediddleMain extends ApplicationAdapter {
 		customRoad = new Texture(Gdx.files.internal("roadcustom.png"));
 		sportCar = new Texture(Gdx.files.internal("Car.png"));
 		taxiImage = new Texture(Gdx.files.internal("taxi.png"));
+		viperImage = new Texture(Gdx.files.internal("Black_viper.png"));
 		explosionImage = new Texture(Gdx.files.internal("explosion.png"));
 
 		sportSprite = new Sprite(sportCar);
@@ -72,8 +78,15 @@ public class PediddleMain extends ApplicationAdapter {
 		taxiSprite = new Sprite(taxiImage);
 		taxiSprite.setSize(120, 120);
 
+		viperSprite = new Sprite(viperImage);
+		viperSprite.setSize(120,120);
+
 
 		roadSprite = new Sprite(roadImage);
+
+
+		//create Car holder
+		carArray = new ArrayList<Car>();
 
 		//load car sound
 		drivingMusic = Gdx.audio.newMusic(Gdx.files.internal("driving_sound.mp3"));
@@ -137,11 +150,14 @@ public class PediddleMain extends ApplicationAdapter {
 					sportSprite.setX(car.x);
 					sportSprite.setY(car.y);
 					sportSprite.draw(batch);
-				}
-				for(Rectangle taxi: taxis){
-					taxiSprite.setX(taxi.x);
-					taxiSprite.setY(taxi.y);
-					taxiSprite.draw(batch);
+				}//change this to cars
+				for(Car car: carArray){
+					//taxiSprite.setX(taxi.x);
+					//taxiSprite.setY(taxi.y);
+					//taxiSprite.draw(batch);
+					car.getCarSprite().setX(car.getX());
+					car.getCarSprite().setY(car.getY());
+					car.getCarSprite().draw(batch);
 				}
 
 				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
@@ -193,12 +209,12 @@ public class PediddleMain extends ApplicationAdapter {
 					if(car.y + 200 < 0)iter3.remove();
 				}
 
-				Iterator<Rectangle> iter4 = taxis.iterator();
+				Iterator<Car> iter4 = carArray.iterator();
 				while(iter4.hasNext()){
-					Rectangle taxi = iter4.next();
-					taxi.y -= 250 * (Gdx.graphics.getDeltaTime());
-					if(taxi.y + 200 < 0)iter4.remove();
-					if(taxi.overlaps(mainCar)){
+					Rectangle car = iter4.next();
+					car.y -= 250 * (Gdx.graphics.getDeltaTime());
+					if(car.y + 200 < 0)iter4.remove();
+					if(car.overlaps(mainCar)){
 						//crash
 						crashSound.play();
 						state = State.CRASH;
@@ -231,11 +247,13 @@ public class PediddleMain extends ApplicationAdapter {
 					sportSprite.setY(car.y);
 					sportSprite.draw(batch);
 				}
-				for(Rectangle taxi: taxis){
-					taxiSprite.setX(taxi.x);
-					taxiSprite.setY(taxi.y);
-					taxiSprite.setTexture(explosionImage);
-					taxiSprite.draw(batch);
+				for(Car car: carArray){
+					//taxiSprite.setX(taxi.x);
+					//taxiSprite.setY(taxi.y);
+					//taxiSprite.draw(batch);
+					car.getCarSprite().setX(car.getX());
+					car.getCarSprite().setY(car.getY());
+					car.getCarSprite().draw(batch);
 				}
 
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
@@ -279,18 +297,26 @@ public class PediddleMain extends ApplicationAdapter {
 	}
 
 	public void spawnTaxi(){
-		Rectangle taxi = new Rectangle();
+		Car car = new Car();
 		//random side of road
 		//right side 600 left 480
 		if(Math.random() >= 0.5){
-			taxi.x = 600;
+			car.x = 600;
 		}else{
-			taxi.x = 480;
+			car.x = 480;
 		}
-		taxi.y = 600;
-		taxi.width = 60;
-		taxi.height = 120;
-		taxis.add(taxi);
+		car.y = 600;
+		car.width = 60;
+		car.height = 120;
+
+		//set Image for car
+		if(Math.random() >= 0.5){
+			car.setCarSprite(viperSprite);
+		}else{
+			car.setCarSprite(taxiSprite);
+		}
+
+		carArray.add(car);
 		lastTaxiTime = TimeUtils.nanoTime();
 	}
 
