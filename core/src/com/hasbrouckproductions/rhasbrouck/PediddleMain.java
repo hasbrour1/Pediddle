@@ -31,7 +31,7 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture explosionImage;
 
 	private Sound crashSound;
-	private Sound carSound;
+	private Music drivingMusic;
 
 	private Sprite roadSprite;
 	private Sprite sportSprite;
@@ -76,11 +76,11 @@ public class PediddleMain extends ApplicationAdapter {
 		roadSprite = new Sprite(roadImage);
 
 		//load car sound
-		carSound = Gdx.audio.newSound(Gdx.files.internal("car-motor.wav"));
+		drivingMusic = Gdx.audio.newMusic(Gdx.files.internal("driving_sound.mp3"));
 		crashSound = Gdx.audio.newSound(Gdx.files.internal("car-crash.wav"));
 
-		//play music in background
-		carSound.loop();
+		drivingMusic.setLooping(true);
+		drivingMusic.play();
 
 		//config camera
 		camera = new OrthographicCamera();
@@ -299,7 +299,7 @@ public class PediddleMain extends ApplicationAdapter {
 		super.dispose();
 		audiImage.dispose();
 		roadImage.dispose();
-		carSound.dispose();
+		drivingMusic.dispose();
 		batch.dispose();
 	}
 
