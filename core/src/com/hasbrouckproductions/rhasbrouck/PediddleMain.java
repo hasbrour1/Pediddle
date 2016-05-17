@@ -11,11 +11,16 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -63,6 +68,9 @@ public class PediddleMain extends ApplicationAdapter {
 	private long lastCarTime;
 	private long lastTaxiTime;
 
+	private RestartButton mRestartButton;
+	private Texture restartButtonImage;
+
 	private State state = State.RUN;
 
 	@Override
@@ -105,6 +113,9 @@ public class PediddleMain extends ApplicationAdapter {
 
 		roadSprite = new Sprite(roadImage);
 
+		//Restart Button
+		restartButtonImage = new Texture(Gdx.files.internal("restartbutton.png"));
+		mRestartButton = new RestartButton(restartButtonImage, 350, 240, 120, 50);
 
 		//create Car holder
 		leftLaneArray = new ArrayList<Car>();
@@ -274,11 +285,18 @@ public class PediddleMain extends ApplicationAdapter {
 
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
+				mRestartButton.update(batch);
+
 				batch.end();
 
 				//if screen it touched, relaunch from beginning
 				if(Gdx.input.isTouched()){
-					create();
+					Vector3 touchPos = new Vector3();
+					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+					camera.unproject(touchPos);
+					if(mRestartButton.checkIfClicked(touchPos.x, touchPos.y)){
+						create();
+					}
 				}
 
 				break;
@@ -356,6 +374,12 @@ public class PediddleMain extends ApplicationAdapter {
 		super.dispose();
 		audiImage.dispose();
 		roadImage.dispose();
+		policeImage.dispose();
+		ambulanceImage.dispose();
+		sportCar.dispose();
+		crashSound.dispose();
+		explosionImage.dispose();
+		truckImage.dispose();
 		drivingMusic.dispose();
 		batch.dispose();
 	}
