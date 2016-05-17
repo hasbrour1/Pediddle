@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /**
  * Created by hasbrouckr on 5/17/2016.
  */
-public class RestartButton {
+public class CustomButton {
 
     private Sprite skin;
 
-    public RestartButton(Texture texture, float x, float y, float width, float height) {
+    public CustomButton(Texture texture, float x, float y, float width, float height) {
         skin = new Sprite(texture); // your image
         skin.setPosition(x, y);
         skin.setSize(width, height);

@@ -5,26 +5,17 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import org.w3c.dom.css.Rect;
 
 public class PediddleMain extends ApplicationAdapter {
 
@@ -68,8 +59,11 @@ public class PediddleMain extends ApplicationAdapter {
 	private long lastCarTime;
 	private long lastTaxiTime;
 
-	private RestartButton mRestartButton;
+	private CustomButton mCustomButton;
 	private Texture restartButtonImage;
+
+	private CustomButton mStartButton;
+	private Texture startButtonImage;
 
 	private State state = State.RUN;
 
@@ -115,7 +109,11 @@ public class PediddleMain extends ApplicationAdapter {
 
 		//Restart Button
 		restartButtonImage = new Texture(Gdx.files.internal("restartbutton.png"));
-		mRestartButton = new RestartButton(restartButtonImage, 350, 240, 120, 50);
+		mCustomButton = new CustomButton(restartButtonImage, 350, 240, 120, 50);
+
+		//Start Button
+		startButtonImage = new Texture(Gdx.files.internal("startbutton.png"));
+		mStartButton = new CustomButton(startButtonImage, 350, 240, 120, 50);
 
 		//create Car holder
 		leftLaneArray = new ArrayList<Car>();
@@ -147,13 +145,38 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnLeftLane();
 		spawnRightLane();
 
-		state = State.RUN;
+		state = State.START;
 	}
 
 	@Override
 	public void render () {
 
 		switch(state){
+			case START:
+				camera.update();
+
+				//use coordinate system defined in camera
+				batch.setProjectionMatrix(camera.combined);
+
+				//start rendering objects
+				batch.begin();
+
+				batch.draw(customRoad, 0, 0);
+				mStartButton.update(batch);
+
+				batch.end();
+
+				//if screen it touched, relaunch from beginning
+				if(Gdx.input.isTouched()){
+					Vector3 touchPos = new Vector3();
+					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+					camera.unproject(touchPos);
+					if(mStartButton.checkIfClicked(touchPos.x, touchPos.y)){
+						state = state.RUN;
+					}
+				}
+				break;
+
 			case RUN:
 				//render car
 				Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -290,7 +313,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
-				mRestartButton.update(batch);
+				mCustomButton.update(batch);
 
 				batch.end();
 
@@ -299,7 +322,7 @@ public class PediddleMain extends ApplicationAdapter {
 					Vector3 touchPos = new Vector3();
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
-					if(mRestartButton.checkIfClicked(touchPos.x, touchPos.y)){
+					if(mCustomButton.checkIfClicked(touchPos.x, touchPos.y)){
 						create();
 					}
 				}
@@ -390,6 +413,7 @@ public class PediddleMain extends ApplicationAdapter {
 	}
 
 	public enum State{
+		START,
 		PAUSE,
 		RUN,
 		CRASH,
