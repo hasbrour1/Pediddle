@@ -229,11 +229,12 @@ public class PediddleMain extends ApplicationAdapter {
 
 				Iterator<Car> iter4 = leftLaneArray.iterator();
 				while(iter4.hasNext()){
-					Rectangle car = iter4.next();
+					Car car = iter4.next();
 					car.y -= 250 * (Gdx.graphics.getDeltaTime());
 					if(car.y + 200 < 0)iter4.remove();
 					if(car.overlaps(mainCar)){
 						//crash
+						car.setCarSprite(new Sprite(explosionImage));
 						crashSound.play();
 						state = State.CRASH;
 					}
