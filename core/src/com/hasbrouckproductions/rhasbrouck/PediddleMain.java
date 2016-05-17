@@ -198,7 +198,12 @@ public class PediddleMain extends ApplicationAdapter {
 					Vector3 touchPos = new Vector3();
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
-					mainCar.x = touchPos.x - 64/2;
+					//main car movement
+					if(touchPos.x - 64/2 > mainCar.x && touchPos.x - 64/2 >= 10 + mainCar.x){
+						mainCar.x += 5;
+					}else if(touchPos.x - 64/2 < mainCar.x && touchPos.x - 64/2 <= 10 + mainCar.x){
+						mainCar.x -= 5;
+					}
 				}
 
 				//have car stay between road
