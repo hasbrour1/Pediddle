@@ -152,23 +152,10 @@ public class PediddleMain extends ApplicationAdapter {
 		leftLaneArray = new ArrayList<Car>();
 		rightLaneArray = new ArrayList<Car>();
 
-		//load car sound
-		drivingMusic = Gdx.audio.newMusic(Gdx.files.internal("driving_sound.mp3"));
-		crashSound = Gdx.audio.newSound(Gdx.files.internal("car-crash.wav"));
-
-		drivingMusic.setLooping(true);
-
 		//config camera
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
-
-		//Config main car
-		mainCar = new Rectangle();
-		mainCar.x = 800/2 - 64 / 2;
-		mainCar.y = 40;
-		mainCar.width = 60;
-		mainCar.height = 120;
 
 		roads = new Array<Rectangle>();
 		roads2 = new Array<Rectangle>();
@@ -177,7 +164,7 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnLeftLane();
 		spawnRightLane();
 
-		state = State.START;
+		state = State.RUN;
 	}
 
 	@Override
@@ -357,7 +344,7 @@ public class PediddleMain extends ApplicationAdapter {
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
 					if(mCustomButton.checkIfClicked(touchPos.x, touchPos.y)){
-						create();
+						resume();
 					}
 				}
 
