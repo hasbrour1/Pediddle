@@ -50,7 +50,6 @@ public class PediddleMain extends ApplicationAdapter {
 
 	private Array<Rectangle> roads;
 	private Array<Rectangle> roads2;
-	private Array<Rectangle> cars;
 
 	private ArrayList<Car> leftLaneArray;
 	private ArrayList<Car> rightLaneArray;
@@ -139,7 +138,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 		roads = new Array<Rectangle>();
 		roads2 = new Array<Rectangle>();
-		cars = new Array<Rectangle>();
+
 		spawnRoad();
 		spawnLeftLane();
 		spawnRightLane();
@@ -159,7 +158,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 		roads = new Array<Rectangle>();
 		roads2 = new Array<Rectangle>();
-		cars = new Array<Rectangle>();
+
 		spawnRoad();
 		spawnLeftLane();
 		spawnRightLane();
