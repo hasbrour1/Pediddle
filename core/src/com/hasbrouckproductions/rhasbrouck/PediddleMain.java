@@ -344,6 +344,7 @@ public class PediddleMain extends ApplicationAdapter {
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
 					if(mCustomButton.checkIfClicked(touchPos.x, touchPos.y)){
+						drivingMusic.play();
 						resume();
 					}
 				}
