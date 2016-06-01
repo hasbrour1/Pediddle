@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,6 +19,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
+
+/*
+ *
+ * 	PediddleMain runs the main game and
+ * 	Changes between game states
+ * 	use https://github.com/libgdx/libgdx/wiki/Accelerometer
+ *	to capture motion
+ *
+ */
 public class PediddleMain extends ApplicationAdapter {
 
 	//Car and Road Textures
@@ -85,6 +95,10 @@ public class PediddleMain extends ApplicationAdapter {
 	private long startTime;
 	private long estimatedTime;
 	private BitmapFont font;
+
+	//Accelerometer Variables
+	private float startZ;
+	private float accelZ;
 
 	@Override
 	public void create () {
@@ -396,6 +410,13 @@ public class PediddleMain extends ApplicationAdapter {
 
 				font.draw(batch, "Longest Time: " + longestTime + " Seconds" , 10, 460);
 				font.draw(batch, "High Score: " + highScore + " Pediddles" , 10, 420);
+
+				//Testing Accellerometer
+
+				accelZ = Gdx.input.getAccelerometerZ();
+				if(accelZ < 3 && accelZ > -3){
+					font.draw(batch, "Pediddle!" , 300, 390);
+				}
 
 				batch.end();
 
