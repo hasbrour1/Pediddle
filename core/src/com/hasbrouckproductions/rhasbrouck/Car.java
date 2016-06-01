@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
  * Created by hasbrouckr on 5/16/2016.
- * This class will hold the car information
+ * This class will hold the car sprite and
+ * extends the Rectangle class
  *
  */
 public class Car extends Rectangle {

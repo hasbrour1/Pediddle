@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 public class PediddleMain extends ApplicationAdapter {
 
-	//Asset import
+	//Car and Road Textures
 	private Texture audiImage;
 	private Texture roadImage;
 	private Texture customRoad;
@@ -32,9 +32,11 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture truckImage;
 	private Texture policeImage;
 
+	//Sound imports
 	private Sound crashSound;
 	private Music drivingMusic;
 
+	//sprite for cars
 	private Sprite roadSprite;
 	private Sprite sportSprite;
 	private Sprite taxiSprite;
@@ -47,14 +49,18 @@ public class PediddleMain extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
+	//Main car Rectangle
 	private Rectangle mainCar;
 
+	//Arrays for road lines
 	private Array<Rectangle> roads;
 	private Array<Rectangle> roads2;
 
+	//Arrays for cars appearing on both lanes
 	private ArrayList<Car> leftLaneArray;
 	private ArrayList<Car> rightLaneArray;
 
+	//Times for spawning;
 	private long lastRoadTime;
 	private long lastCarTime;
 	private long lastTaxiTime;
@@ -65,10 +71,13 @@ public class PediddleMain extends ApplicationAdapter {
 	private CustomButton mStartButton;
 	private Texture startButtonImage;
 
-	private State state = State.RUN;
+	//State keeps track of current game state
+	private State state;
 
+	//Score for how many pediddles
 	private int score;
 
+	//keeps track of elapsed time
 	private long startTime;
 	private long estimatedTime;
 	private BitmapFont font;
@@ -87,6 +96,7 @@ public class PediddleMain extends ApplicationAdapter {
 		policeImage = new Texture(Gdx.files.internal("Police.png"));
 		explosionImage = new Texture(Gdx.files.internal("explosion.png"));
 
+		//load car sprites
 		sportSprite = new Sprite(sportCar);
 		sportSprite.setSize(120, 120);
 		sportSprite.setOrigin(0,0);
@@ -143,18 +153,22 @@ public class PediddleMain extends ApplicationAdapter {
 		mainCar.width = 60;
 		mainCar.height = 120;
 
+		//initialize road arrays
 		roads = new Array<Rectangle>();
 		roads2 = new Array<Rectangle>();
 
+		//Spawn first roads and cars
 		spawnRoad();
 		spawnLeftLane();
 		spawnRightLane();
 
 		font = new BitmapFont();
 
+		//Start game
 		state = State.START;
 	}
 
+	//Resume will restart a new game after a crash
 	public void resume(){
 		//create Car holder
 		leftLaneArray = new ArrayList<Car>();
@@ -180,6 +194,7 @@ public class PediddleMain extends ApplicationAdapter {
 	@Override
 	public void render () {
 
+		//Render according to state of game
 		switch(state){
 			case START:
 				camera.update();
@@ -222,6 +237,7 @@ public class PediddleMain extends ApplicationAdapter {
 				//start rendering opjects
 				batch.begin();
 
+				//Draw Roads and Cars
 				batch.draw(customRoad, 0, 0);
 				for(Rectangle road: roads){
 					roadSprite.setX(road.x);
@@ -244,12 +260,15 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().draw(batch);
 				}
 
+
+				//Draw Score and Time
 				estimatedTime = System.currentTimeMillis() - startTime;
 				estimatedTime /= 100;
 
 				font.draw(batch, estimatedTime + "", 10, 20);
 				font.draw(batch, "Score: " + score, 740, 20);
 
+				//Draw Main Car
 				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
 
 				batch.end();
@@ -343,7 +362,7 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
-				}//change this to cars
+				}
 				for(Car car: leftLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
@@ -374,6 +393,7 @@ public class PediddleMain extends ApplicationAdapter {
 		}
 	}
 
+	//Spawns road lines
 	public void spawnRoad(){
 		Rectangle road = new Rectangle();
 		road.x = 210;
@@ -385,6 +405,7 @@ public class PediddleMain extends ApplicationAdapter {
 		lastRoadTime = TimeUtils.nanoTime();
 	}
 
+	//Spawns cars on left lane
 	public void spawnLeftLane(){
 		Car car = new Car();
 		//random side of road
@@ -412,6 +433,7 @@ public class PediddleMain extends ApplicationAdapter {
 		lastCarTime = TimeUtils.nanoTime();
 	}
 
+	//spawns cars on right lane
 	public void spawnRightLane(){
 		Car car = new Car();
 

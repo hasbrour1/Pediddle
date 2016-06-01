@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * Created by hasbrouckr on 5/17/2016.
+ * Creates a custom button
+ *
  */
 public class CustomButton {
 
