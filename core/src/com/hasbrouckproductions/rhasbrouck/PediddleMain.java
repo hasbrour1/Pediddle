@@ -77,6 +77,10 @@ public class PediddleMain extends ApplicationAdapter {
 	//Score for how many pediddles
 	private int score;
 
+	//High Scores
+	private int highScore;
+	private long longestTime;
+
 	//keeps track of elapsed time
 	private long startTime;
 	private long estimatedTime;
@@ -163,6 +167,9 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnRightLane();
 
 		font = new BitmapFont();
+
+		highScore = 0;
+		longestTime = 0;
 
 		//Start game
 		state = State.START;
@@ -377,6 +384,17 @@ public class PediddleMain extends ApplicationAdapter {
 				mCustomButton.update(batch);
 				font.draw(batch, "You Lasted: " + estimatedTime + " Seconds" , 350, 215);
 				font.draw(batch, "You Scored: " + score + " Pediddles" , 350, 200);
+
+				//High Score Display
+				if(longestTime < estimatedTime){
+					longestTime = estimatedTime;
+				}
+				if(highScore < score){
+					highScore = score;
+				}
+
+				font.draw(batch, "Longest Time: " + longestTime + " Seconds" , 10, 460);
+				font.draw(batch, "High Score: " + highScore + " Pediddles" , 10, 440);
 
 				batch.end();
 
