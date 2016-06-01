@@ -124,11 +124,11 @@ public class PediddleMain extends ApplicationAdapter {
 		roadSprite = new Sprite(roadImage);
 
 		//Restart Button
-		restartButtonImage = new Texture(Gdx.files.internal("restartbutton.png"));
+		restartButtonImage = new Texture(Gdx.files.internal("startbutton2.png"));
 		mCustomButton = new CustomButton(restartButtonImage, 350, 240, 120, 50);
 
 		//Start Button
-		startButtonImage = new Texture(Gdx.files.internal("startbutton.png"));
+		startButtonImage = new Texture(Gdx.files.internal("startbutton2.png"));
 		mStartButton = new CustomButton(startButtonImage, 350, 240, 120, 50);
 
 		//create Car holder
@@ -375,6 +375,8 @@ public class PediddleMain extends ApplicationAdapter {
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
 				mCustomButton.update(batch);
+				font.draw(batch, "You Lasted: " + estimatedTime + " Seconds" , 350, 215);
+				font.draw(batch, "You Scored: " + score + " Pediddles" , 350, 200);
 
 				batch.end();
 
