@@ -10,6 +10,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -65,6 +66,10 @@ public class PediddleMain extends ApplicationAdapter {
 	private Texture startButtonImage;
 
 	private State state = State.RUN;
+
+	private long startTime;
+	private long estimatedTime;
+	private BitmapFont font;
 
 	@Override
 	public void create () {
@@ -143,6 +148,8 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnLeftLane();
 		spawnRightLane();
 
+		font = new BitmapFont();
+
 		state = State.START;
 	}
 
@@ -163,6 +170,7 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnLeftLane();
 		spawnRightLane();
 
+		startTime = System.currentTimeMillis();
 		state = State.RUN;
 	}
 
@@ -191,6 +199,7 @@ public class PediddleMain extends ApplicationAdapter {
 					camera.unproject(touchPos);
 					if(mStartButton.checkIfClicked(touchPos.x, touchPos.y)){
 						drivingMusic.play();
+						startTime = System.currentTimeMillis();
 						state = state.RUN;
 					}
 				}
@@ -230,6 +239,11 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
 				}
+
+				estimatedTime = System.currentTimeMillis() - startTime;
+				estimatedTime /= 100;
+
+				font.draw(batch, estimatedTime + "", 10, 10);
 
 				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
 
@@ -330,6 +344,8 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
 				}
+
+				font.draw(batch, estimatedTime + "", 10, 10);
 
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
