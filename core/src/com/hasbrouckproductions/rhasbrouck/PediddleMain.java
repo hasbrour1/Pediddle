@@ -67,6 +67,8 @@ public class PediddleMain extends ApplicationAdapter {
 
 	private State state = State.RUN;
 
+	private int score;
+
 	private long startTime;
 	private long estimatedTime;
 	private BitmapFont font;
@@ -170,6 +172,7 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnLeftLane();
 		spawnRightLane();
 
+		score = 0;
 		startTime = System.currentTimeMillis();
 		state = State.RUN;
 	}
@@ -199,6 +202,7 @@ public class PediddleMain extends ApplicationAdapter {
 					camera.unproject(touchPos);
 					if(mStartButton.checkIfClicked(touchPos.x, touchPos.y)){
 						drivingMusic.play();
+						score = 0;
 						startTime = System.currentTimeMillis();
 						state = state.RUN;
 					}
@@ -243,7 +247,8 @@ public class PediddleMain extends ApplicationAdapter {
 				estimatedTime = System.currentTimeMillis() - startTime;
 				estimatedTime /= 100;
 
-				font.draw(batch, estimatedTime + "", 10, 10);
+				font.draw(batch, estimatedTime + "", 10, 20);
+				font.draw(batch, "Score: " + score, 740, 20);
 
 				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
 
@@ -345,7 +350,8 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().draw(batch);
 				}
 
-				font.draw(batch, estimatedTime + "", 10, 10);
+				font.draw(batch, estimatedTime + "", 10, 20);
+				font.draw(batch, "Score: " + score, 740, 20);
 
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
