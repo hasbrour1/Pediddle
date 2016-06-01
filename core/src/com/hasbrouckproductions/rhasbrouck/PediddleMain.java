@@ -166,7 +166,8 @@ public class PediddleMain extends ApplicationAdapter {
 		spawnLeftLane();
 		spawnRightLane();
 
-		font = new BitmapFont();
+		font = new BitmapFont(Gdx.files.internal("pediddle.fnt"),
+				Gdx.files.internal("pediddle.png"), false);
 
 		highScore = 0;
 		longestTime = 0;
@@ -272,8 +273,8 @@ public class PediddleMain extends ApplicationAdapter {
 				estimatedTime = System.currentTimeMillis() - startTime;
 				estimatedTime /= 100;
 
-				font.draw(batch, estimatedTime + "", 10, 20);
-				font.draw(batch, "Score: " + score, 740, 20);
+				font.draw(batch, estimatedTime + "", 10, 40);
+				font.draw(batch, "Score: " + score, 10, 100);
 
 				//Draw Main Car
 				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
@@ -376,14 +377,14 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().draw(batch);
 				}
 
-				font.draw(batch, estimatedTime + "", 10, 20);
-				font.draw(batch, "Score: " + score, 740, 20);
+				font.draw(batch, estimatedTime + "", 10, 40);
+				font.draw(batch, "Score: " + score, 10, 100);
 
 				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
 
 				mCustomButton.update(batch);
-				font.draw(batch, "You Lasted: " + estimatedTime + " Seconds" , 350, 215);
-				font.draw(batch, "You Scored: " + score + " Pediddles" , 350, 200);
+				font.draw(batch, "You Lasted: " + estimatedTime + " Seconds" , 330, 215);
+				font.draw(batch, "You Scored: " + score + " Pediddles" , 330, 180);
 
 				//High Score Display
 				if(longestTime < estimatedTime){
@@ -394,7 +395,7 @@ public class PediddleMain extends ApplicationAdapter {
 				}
 
 				font.draw(batch, "Longest Time: " + longestTime + " Seconds" , 10, 460);
-				font.draw(batch, "High Score: " + highScore + " Pediddles" , 10, 440);
+				font.draw(batch, "High Score: " + highScore + " Pediddles" , 10, 420);
 
 				batch.end();
 
