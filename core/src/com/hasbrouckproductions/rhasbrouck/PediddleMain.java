@@ -100,11 +100,6 @@ public class PediddleMain extends ApplicationAdapter {
 		roads = new Array<Rectangle>();
 		roads2 = new Array<Rectangle>();
 
-		//Spawn first roads and cars
-		spawnRoad();
-		spawnLeftLane();
-		spawnRightLane();
-
 		font = new BitmapFont(Gdx.files.internal("pediddle.fnt"),
 				Gdx.files.internal("pediddle.png"), false);
 
@@ -149,8 +144,10 @@ public class PediddleMain extends ApplicationAdapter {
 				//start rendering objects
 				batch.begin();
 
-				batch.draw(Assets.customRoad, 0, 0);
+				batch.draw(Assets.startScreen, 0, 0);
 				mStartButton.update(batch);
+				font.draw(batch, "Longest Time: " + Settings.longestTime + " Seconds" , 10, 100);
+				font.draw(batch, "High Score: " + Settings.highScore + " Pediddles" , 10, 60);
 
 				batch.end();
 
@@ -162,6 +159,10 @@ public class PediddleMain extends ApplicationAdapter {
 					if(mStartButton.checkIfClicked(touchPos.x, touchPos.y)){
 						Assets.drivingMusic.play();
 						score = 0;
+						//Spawn first roads and cars
+						spawnRoad();
+						spawnLeftLane();
+						spawnRightLane();
 						startTime = System.currentTimeMillis();
 						state = state.RUN;
 					}
@@ -337,7 +338,7 @@ public class PediddleMain extends ApplicationAdapter {
 				//Testing Accellerometer
 
 				accelZ = Gdx.input.getAccelerometerZ();
-				if(accelZ < 0){
+				if(accelZ < -5){
 					font.draw(batch, "Pediddle!" + accelZ, 300, 390);
 				}
 

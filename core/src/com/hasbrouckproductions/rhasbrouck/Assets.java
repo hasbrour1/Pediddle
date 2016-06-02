@@ -17,6 +17,7 @@ public class Assets {
     public static Texture audiImage;
     public static Texture roadImage;
     public static Texture customRoad;
+    public static Texture startScreen;
     public static Texture sportCar;
     public static Texture taxiImage;
     public static Texture viperImage;
@@ -57,6 +58,7 @@ public class Assets {
         truckImage = new Texture(Gdx.files.internal("Mini_truck.png"));
         policeImage = new Texture(Gdx.files.internal("Police.png"));
         explosionImage = new Texture(Gdx.files.internal("explosion.png"));
+        startScreen = new Texture(Gdx.files.internal("startscreen.png"));
 
         //load car sprites
         sportSprite = new Sprite(sportCar);
