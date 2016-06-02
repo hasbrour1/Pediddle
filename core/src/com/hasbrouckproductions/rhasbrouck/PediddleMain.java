@@ -59,9 +59,6 @@ public class PediddleMain extends ApplicationAdapter {
 	//Score for how many pediddles
 	private int score;
 
-	//High Scores
-	private int highScore;
-
 	//keeps track of elapsed time
 	private long startTime;
 	private long estimatedTime;
@@ -110,8 +107,6 @@ public class PediddleMain extends ApplicationAdapter {
 
 		font = new BitmapFont(Gdx.files.internal("pediddle.fnt"),
 				Gdx.files.internal("pediddle.png"), false);
-
-		highScore = 0;
 
 		//Start game
 		state = State.START;
@@ -329,15 +324,15 @@ public class PediddleMain extends ApplicationAdapter {
 
 				//High Score Display
 				if(Settings.longestTime < estimatedTime){
-					Settings.addScore(estimatedTime);
+					Settings.addTime(estimatedTime);
 					Settings.save();
 				}
-				if(highScore < score){
-					highScore = score;
+				if(Settings.highScore < score){
+					Settings.addHighScore(score);
 				}
 
 				font.draw(batch, "Longest Time: " + Settings.longestTime + " Seconds" , 10, 460);
-				font.draw(batch, "High Score: " + highScore + " Pediddles" , 10, 420);
+				font.draw(batch, "High Score: " + Settings.highScore + " Pediddles" , 10, 420);
 
 				//Testing Accellerometer
 
