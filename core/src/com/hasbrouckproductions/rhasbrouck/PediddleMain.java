@@ -30,31 +30,6 @@ import com.badlogic.gdx.utils.TimeUtils;
  */
 public class PediddleMain extends ApplicationAdapter {
 
-	//Car and Road Textures
-	private Texture audiImage;
-	private Texture roadImage;
-	private Texture customRoad;
-	private Texture sportCar;
-	private Texture taxiImage;
-	private Texture viperImage;
-	private Texture explosionImage;
-	private Texture ambulanceImage;
-	private Texture truckImage;
-	private Texture policeImage;
-
-	//Sound imports
-	private Sound crashSound;
-	private Music drivingMusic;
-
-	//sprite for cars
-	private Sprite roadSprite;
-	private Sprite sportSprite;
-	private Sprite taxiSprite;
-	private Sprite viperSprite;
-	private Sprite ambulanceSprite;
-	private Sprite policeSprite;
-	private Sprite truckSprite;
-
 	//Camera and Sprite Batch
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -76,10 +51,7 @@ public class PediddleMain extends ApplicationAdapter {
 	private long lastTaxiTime;
 
 	private CustomButton mCustomButton;
-	private Texture restartButtonImage;
-
 	private CustomButton mStartButton;
-	private Texture startButtonImage;
 
 	//State keeps track of current game state
 	private State state;
@@ -97,67 +69,23 @@ public class PediddleMain extends ApplicationAdapter {
 	private BitmapFont font;
 
 	//Accelerometer Variables
-	private float startZ;
 	private float accelZ;
 
 	@Override
 	public void create () {
-		//load images
-		audiImage = new Texture(Gdx.files.internal("Audi.png"));
-		roadImage = new Texture(Gdx.files.internal("roadmarker.png"));
-		customRoad = new Texture(Gdx.files.internal("roadcustom.png"));
-		sportCar = new Texture(Gdx.files.internal("Car.png"));
-		taxiImage = new Texture(Gdx.files.internal("taxi.png"));
-		viperImage = new Texture(Gdx.files.internal("Black_viper.png"));
-		ambulanceImage = new Texture(Gdx.files.internal("Ambulance.png"));
-		truckImage = new Texture(Gdx.files.internal("Mini_truck.png"));
-		policeImage = new Texture(Gdx.files.internal("Police.png"));
-		explosionImage = new Texture(Gdx.files.internal("explosion.png"));
 
-		//load car sprites
-		sportSprite = new Sprite(sportCar);
-		sportSprite.setSize(120, 120);
-		sportSprite.setOrigin(0,0);
-		sportSprite.setRotation(-180);
+		//Load Assets
+		Assets.load();
 
-		taxiSprite = new Sprite(taxiImage);
-		taxiSprite.setSize(120, 120);
-
-		viperSprite = new Sprite(viperImage);
-		viperSprite.setSize(120,120);
-
-		ambulanceSprite = new Sprite(ambulanceImage);
-		ambulanceSprite.setSize(120, 120);
-		ambulanceSprite.setOrigin(0,0);
-		ambulanceSprite.setRotation(-180);
-
-		truckSprite = new Sprite(truckImage);
-		truckSprite.setSize(120, 120);
-		truckSprite.setOrigin(0,0);
-		truckSprite.setRotation(-180);
-
-		policeSprite = new Sprite(policeImage);
-		policeSprite.setSize(120, 120);
-
-		roadSprite = new Sprite(roadImage);
-
-		//Restart Button
-		restartButtonImage = new Texture(Gdx.files.internal("startbutton2.png"));
-		mCustomButton = new CustomButton(restartButtonImage, 350, 240, 120, 50);
+		mCustomButton = new CustomButton(Assets.restartButtonImage, 350, 240, 120, 50);
 
 		//Start Button
-		startButtonImage = new Texture(Gdx.files.internal("startbutton2.png"));
-		mStartButton = new CustomButton(startButtonImage, 350, 240, 120, 50);
+
+		mStartButton = new CustomButton(Assets.startButtonImage, 350, 240, 120, 50);
 
 		//create Car holder
 		leftLaneArray = new ArrayList<Car>();
 		rightLaneArray = new ArrayList<Car>();
-
-		//load car sound
-		drivingMusic = Gdx.audio.newMusic(Gdx.files.internal("driving_sound.mp3"));
-		crashSound = Gdx.audio.newSound(Gdx.files.internal("car-crash.wav"));
-
-		drivingMusic.setLooping(true);
 
 		//config camera
 		camera = new OrthographicCamera();
@@ -227,7 +155,7 @@ public class PediddleMain extends ApplicationAdapter {
 				//start rendering objects
 				batch.begin();
 
-				batch.draw(customRoad, 0, 0);
+				batch.draw(Assets.customRoad, 0, 0);
 				mStartButton.update(batch);
 
 				batch.end();
@@ -238,7 +166,7 @@ public class PediddleMain extends ApplicationAdapter {
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
 					if(mStartButton.checkIfClicked(touchPos.x, touchPos.y)){
-						drivingMusic.play();
+						Assets.drivingMusic.play();
 						score = 0;
 						startTime = System.currentTimeMillis();
 						state = state.RUN;
@@ -260,16 +188,16 @@ public class PediddleMain extends ApplicationAdapter {
 				batch.begin();
 
 				//Draw Roads and Cars
-				batch.draw(customRoad, 0, 0);
+				batch.draw(Assets.customRoad, 0, 0);
 				for(Rectangle road: roads){
-					roadSprite.setX(road.x);
-					roadSprite.setY(road.y);
-					roadSprite.draw(batch);
+					Assets.roadSprite.setX(road.x);
+					Assets.roadSprite.setY(road.y);
+					Assets.roadSprite.draw(batch);
 				}
 				for(Rectangle road: roads2){
-					roadSprite.setX(590);
-					roadSprite.setY(road.y);
-					roadSprite.draw(batch);
+					Assets.roadSprite.setX(590);
+					Assets.roadSprite.setY(road.y);
+					Assets.roadSprite.draw(batch);
 				}
 				for(Car car: rightLaneArray){
 					car.getCarSprite().setX(car.getX());
@@ -291,7 +219,7 @@ public class PediddleMain extends ApplicationAdapter {
 				font.draw(batch, "Score: " + score, 10, 100);
 
 				//Draw Main Car
-				batch.draw(audiImage, mainCar.x, mainCar.y, 120, 120);
+				batch.draw(Assets.audiImage, mainCar.x, mainCar.y, 120, 120);
 
 				batch.end();
 
@@ -352,9 +280,9 @@ public class PediddleMain extends ApplicationAdapter {
 					if(car.y + 200 < 0)iter4.remove();
 					if(car.overlaps(mainCar)){
 						//crash
-						car.setCarSprite(new Sprite(explosionImage));
-						drivingMusic.pause();
-						crashSound.play();
+						car.setCarSprite(new Sprite(Assets.explosionImage));
+						Assets.drivingMusic.pause();
+						Assets.crashSound.play();
 						state = State.CRASH;
 					}
 				}
@@ -369,16 +297,16 @@ public class PediddleMain extends ApplicationAdapter {
 				//start rendering objects
 				batch.begin();
 
-				batch.draw(customRoad, 0, 0);
+				batch.draw(Assets.customRoad, 0, 0);
 				for(Rectangle road: roads){
-					roadSprite.setX(road.x);
-					roadSprite.setY(road.y);
-					roadSprite.draw(batch);
+					Assets.roadSprite.setX(road.x);
+					Assets.roadSprite.setY(road.y);
+					Assets.roadSprite.draw(batch);
 				}
 				for(Rectangle road: roads2){
-					roadSprite.setX(590);
-					roadSprite.setY(road.y);
-					roadSprite.draw(batch);
+					Assets.roadSprite.setX(590);
+					Assets.roadSprite.setY(road.y);
+					Assets.roadSprite.draw(batch);
 				}
 				for(Car car: rightLaneArray){
 					car.getCarSprite().setX(car.getX());
@@ -394,7 +322,7 @@ public class PediddleMain extends ApplicationAdapter {
 				font.draw(batch, estimatedTime + "", 10, 40);
 				font.draw(batch, "Score: " + score, 10, 100);
 
-				batch.draw(explosionImage, mainCar.x, mainCar.y, 120, 120);
+				batch.draw(Assets.explosionImage, mainCar.x, mainCar.y, 120, 120);
 
 				mCustomButton.update(batch);
 				font.draw(batch, "You Lasted: " + estimatedTime + " Seconds" , 330, 215);
@@ -426,7 +354,7 @@ public class PediddleMain extends ApplicationAdapter {
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
 					if(mCustomButton.checkIfClicked(touchPos.x, touchPos.y)){
-						drivingMusic.play();
+						Assets.drivingMusic.play();
 						resume();
 					}
 				}
@@ -464,11 +392,11 @@ public class PediddleMain extends ApplicationAdapter {
 		//set Image for car
 		double randResult = Math.random();
 		if(randResult <= 0.3){
-			car.setCarSprite(sportSprite);
+			car.setCarSprite(Assets.sportSprite);
 		}else if(randResult > 0.3 && randResult <= 0.7){
-			car.setCarSprite(truckSprite);
+			car.setCarSprite(Assets.truckSprite);
 		}else{
-			car.setCarSprite(ambulanceSprite);
+			car.setCarSprite(Assets.ambulanceSprite);
 		}
 
 		rightLaneArray.add(car);
@@ -493,11 +421,11 @@ public class PediddleMain extends ApplicationAdapter {
 		//set Image for car
 		double randResult = Math.random();
 		if(randResult <= 0.3){
-			car.setCarSprite(viperSprite);
+			car.setCarSprite(Assets.viperSprite);
 		}else if(randResult > 0.3 && randResult <= 0.7){
-			car.setCarSprite(taxiSprite);
+			car.setCarSprite(Assets.taxiSprite);
 		}else{
-			car.setCarSprite(policeSprite);
+			car.setCarSprite(Assets.policeSprite);
 		}
 
 		leftLaneArray.add(car);
@@ -507,15 +435,15 @@ public class PediddleMain extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		super.dispose();
-		audiImage.dispose();
-		roadImage.dispose();
-		policeImage.dispose();
-		ambulanceImage.dispose();
-		sportCar.dispose();
-		crashSound.dispose();
-		explosionImage.dispose();
-		truckImage.dispose();
-		drivingMusic.dispose();
+		Assets.audiImage.dispose();
+		Assets.roadImage.dispose();
+		Assets.policeImage.dispose();
+		Assets.ambulanceImage.dispose();
+		Assets.sportCar.dispose();
+		Assets.crashSound.dispose();
+		Assets.explosionImage.dispose();
+		Assets.truckImage.dispose();
+		Assets.drivingMusic.dispose();
 		batch.dispose();
 	}
 
