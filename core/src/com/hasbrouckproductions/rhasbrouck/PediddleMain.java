@@ -61,7 +61,6 @@ public class PediddleMain extends ApplicationAdapter {
 
 	//High Scores
 	private int highScore;
-	private long longestTime;
 
 	//keeps track of elapsed time
 	private long startTime;
@@ -74,13 +73,14 @@ public class PediddleMain extends ApplicationAdapter {
 	@Override
 	public void create () {
 
+		//Load Settings
+		Settings.load();
+
 		//Load Assets
 		Assets.load();
 
+		//Buttons
 		mCustomButton = new CustomButton(Assets.restartButtonImage, 350, 240, 120, 50);
-
-		//Start Button
-
 		mStartButton = new CustomButton(Assets.startButtonImage, 350, 240, 120, 50);
 
 		//create Car holder
@@ -112,7 +112,6 @@ public class PediddleMain extends ApplicationAdapter {
 				Gdx.files.internal("pediddle.png"), false);
 
 		highScore = 0;
-		longestTime = 0;
 
 		//Start game
 		state = State.START;
@@ -329,21 +328,22 @@ public class PediddleMain extends ApplicationAdapter {
 				font.draw(batch, "You Scored: " + score + " Pediddles" , 330, 180);
 
 				//High Score Display
-				if(longestTime < estimatedTime){
-					longestTime = estimatedTime;
+				if(Settings.longestTime < estimatedTime){
+					Settings.addScore(estimatedTime);
+					Settings.save();
 				}
 				if(highScore < score){
 					highScore = score;
 				}
 
-				font.draw(batch, "Longest Time: " + longestTime + " Seconds" , 10, 460);
+				font.draw(batch, "Longest Time: " + Settings.longestTime + " Seconds" , 10, 460);
 				font.draw(batch, "High Score: " + highScore + " Pediddles" , 10, 420);
 
 				//Testing Accellerometer
 
 				accelZ = Gdx.input.getAccelerometerZ();
-				if(accelZ < 3 && accelZ > -3){
-					font.draw(batch, "Pediddle!" , 300, 390);
+				if(accelZ < 0){
+					font.draw(batch, "Pediddle!" + accelZ, 300, 390);
 				}
 
 				batch.end();
