@@ -14,8 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class Car extends Rectangle {
 
     private Sprite carSprite;
+    private boolean isPediddle;
 
     public Car(){
+        isPediddle = false;
     }
 
     public Sprite getCarSprite() {
@@ -24,5 +26,13 @@ public class Car extends Rectangle {
 
     public void setCarSprite(Sprite carSprite) {
         this.carSprite = carSprite;
+    }
+
+    public boolean isPediddle() {
+        return isPediddle;
+    }
+
+    public void setPediddle(boolean pediddle) {
+        isPediddle = pediddle;
     }
 }

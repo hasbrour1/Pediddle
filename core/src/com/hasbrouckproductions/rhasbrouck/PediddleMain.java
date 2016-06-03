@@ -281,6 +281,12 @@ public class PediddleMain extends ApplicationAdapter {
 						state = State.CRASH;
 					}
 				}
+
+				//Check for pediddle
+				accelZ = Gdx.input.getAccelerometerZ();
+				if(accelZ < -5){
+					score++;
+				}
 				break;
 			case CRASH:
 
