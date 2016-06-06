@@ -5,12 +5,8 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,8 +38,8 @@ public class PediddleMain extends ApplicationAdapter {
 	private Array<Rectangle> roads2;
 
 	//Arrays for cars appearing on both lanes
-	private ArrayList<Car> leftLaneArray;
 	private ArrayList<Car> rightLaneArray;
+	private ArrayList<Car> leftLaneArray;
 
 	//Times for spawning;
 	private long lastRoadTime;
@@ -83,8 +79,8 @@ public class PediddleMain extends ApplicationAdapter {
 		mStartButton = new CustomButton(Assets.startButtonImage, 350, 240, 120, 50);
 
 		//create Car holder
-		leftLaneArray = new ArrayList<Car>();
 		rightLaneArray = new ArrayList<Car>();
+		leftLaneArray = new ArrayList<Car>();
 
 		//config camera
 		camera = new OrthographicCamera();
@@ -112,8 +108,8 @@ public class PediddleMain extends ApplicationAdapter {
 	//Resume will restart a new game after a crash
 	public void resume(){
 		//create Car holder
-		leftLaneArray = new ArrayList<Car>();
 		rightLaneArray = new ArrayList<Car>();
+		leftLaneArray = new ArrayList<Car>();
 
 		//config camera
 		camera = new OrthographicCamera();
@@ -197,12 +193,12 @@ public class PediddleMain extends ApplicationAdapter {
 					Assets.roadSprite.setY(road.y);
 					Assets.roadSprite.draw(batch);
 				}
-				for(Car car: rightLaneArray){
+				for(Car car: leftLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
 				}//change this to cars
-				for(Car car: leftLaneArray){
+				for(Car car: rightLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
@@ -226,7 +222,7 @@ public class PediddleMain extends ApplicationAdapter {
 				accelZ = Gdx.input.getAccelerometerZ();
 				int tempScore;
 				Gdx.app.log("ACCELZ", "Starting accelz Check" + accelZ + " " + (TimeUtils.nanoTime() - lastPediddle));
-				if((accelZ < -5) && (TimeUtils.nanoTime() - lastPediddle > 1000000000 * 2)){
+				if((accelZ < -5) && (TimeUtils.nanoTime() - lastPediddle > 2000000000)){
 					lastPediddle = TimeUtils.nanoTime();
 					tempScore = 0;
 					Gdx.app.log("ACCELZ", "Is below -5");
@@ -291,14 +287,14 @@ public class PediddleMain extends ApplicationAdapter {
 					}
 				}
 
-				Iterator<Car> iter3 = rightLaneArray.iterator();
+				Iterator<Car> iter3 = leftLaneArray.iterator();
 				while(iter3.hasNext()){
 					Rectangle car = iter3.next();
 					car.y -= 300 *(Gdx.graphics.getDeltaTime());
 					if(car.y + 200 < 0)iter3.remove();
 				}
 
-				Iterator<Car> iter4 = leftLaneArray.iterator();
+				Iterator<Car> iter4 = rightLaneArray.iterator();
 				while(iter4.hasNext()){
 					Car car = iter4.next();
 					car.y -= 250 * (Gdx.graphics.getDeltaTime());
@@ -335,12 +331,12 @@ public class PediddleMain extends ApplicationAdapter {
 					Assets.roadSprite.setY(road.y);
 					Assets.roadSprite.draw(batch);
 				}
-				for(Car car: rightLaneArray){
+				for(Car car: leftLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
 				}
-				for(Car car: leftLaneArray){
+				for(Car car: rightLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
@@ -431,7 +427,7 @@ public class PediddleMain extends ApplicationAdapter {
 			car.setCarSprite(Assets.ambulanceSprite);
 		}
 
-		rightLaneArray.add(car);
+		leftLaneArray.add(car);
 		lastCarTime = TimeUtils.nanoTime();
 	}
 
@@ -460,7 +456,7 @@ public class PediddleMain extends ApplicationAdapter {
 			car.setCarSprite(Assets.policeSprite);
 		}
 
-		leftLaneArray.add(car);
+		rightLaneArray.add(car);
 		lastTaxiTime = TimeUtils.nanoTime();
 	}
 
