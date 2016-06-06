@@ -225,8 +225,8 @@ public class PediddleMain extends ApplicationAdapter {
 				//Don't check if last check was less than a second ago
 				accelZ = Gdx.input.getAccelerometerZ();
 				int tempScore;
-				Gdx.app.log("ACCELZ", "Starting accelz Check");
-				if((accelZ < -5) && (TimeUtils.nanoTime() - lastPediddle < 1000000000 * 2)){
+				Gdx.app.log("ACCELZ", "Starting accelz Check" + accelZ + " " + (TimeUtils.nanoTime() - lastPediddle));
+				if((accelZ < -5) && (TimeUtils.nanoTime() - lastPediddle > 1000000000 * 2)){
 					lastPediddle = TimeUtils.nanoTime();
 					tempScore = 0;
 					Gdx.app.log("ACCELZ", "Is below -5");
