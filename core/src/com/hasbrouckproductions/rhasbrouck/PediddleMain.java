@@ -67,6 +67,8 @@ public class PediddleMain extends ApplicationAdapter {
 	//Accelerometer Variables
 	private float accelZ;
 
+	private long lastPediddle;
+
 	@Override
 	public void create () {
 
@@ -127,6 +129,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 		score = 0;
 		startTime = System.currentTimeMillis();
+		lastPediddle = TimeUtils.nanoTime();
 		state = State.RUN;
 	}
 
@@ -219,13 +222,17 @@ public class PediddleMain extends ApplicationAdapter {
 				batch.end();
 
 				//If phone is raised then check if pediddle
+				//Don't check if last check was less than a second ago
 				accelZ = Gdx.input.getAccelerometerZ();
-				int tempScore = 0;
-				if(accelZ < -5){
+				int tempScore;
+				Gdx.app.log("ACCELZ", "Starting accelz Check");
+				if((accelZ < -5) && (TimeUtils.nanoTime() - lastPediddle < 1000000000 * 2)){
+					lastPediddle = TimeUtils.nanoTime();
+					tempScore = 0;
 					Gdx.app.log("ACCELZ", "Is below -5");
 					for(Car car: leftLaneArray){
 						Gdx.app.log("ACCELZ", "checking car");
-						if(car.isPediddle()){
+						if(car.isPediddle() == true){
 							Gdx.app.log("ACCELZ", "add to score");
 							tempScore++;
 						}
@@ -235,7 +242,7 @@ public class PediddleMain extends ApplicationAdapter {
 						Gdx.app.log("ACCELZ", "score sub = " + score);
 						score --;
 					}else{
-						Gdx.app.log("ACCELZ", "score add");
+						Gdx.app.log("ACCELZ", "score add = " + tempScore);
 						score += tempScore;
 					}
 				}
@@ -305,11 +312,7 @@ public class PediddleMain extends ApplicationAdapter {
 					}
 				}
 
-				//Check for pediddle
-				accelZ = Gdx.input.getAccelerometerZ();
-				if(accelZ < -5){
-					score++;
-				}
+
 				break;
 			case CRASH:
 
