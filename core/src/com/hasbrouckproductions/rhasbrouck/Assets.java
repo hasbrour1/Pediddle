@@ -25,6 +25,7 @@ public class Assets {
     public static Texture ambulanceImage;
     public static Texture truckImage;
     public static Texture policeImage;
+    public static Texture pediddleCar;
 
     //Sound imports
     public static Sound crashSound;
@@ -38,6 +39,7 @@ public class Assets {
     public static Sprite ambulanceSprite;
     public static Sprite policeSprite;
     public static Sprite truckSprite;
+    public static Sprite pediddleSprite;
 
     public static Texture startButtonImage;
     public static Texture restartButtonImage;
@@ -59,12 +61,18 @@ public class Assets {
         policeImage = new Texture(Gdx.files.internal("Police.png"));
         explosionImage = new Texture(Gdx.files.internal("explosion.png"));
         startScreen = new Texture(Gdx.files.internal("startscreen.png"));
+        pediddleCar = new Texture(Gdx.files.internal("pediddleCar.png"));
 
         //load car sprites
         sportSprite = new Sprite(sportCar);
         sportSprite.setSize(120, 120);
         sportSprite.setOrigin(0,0);
         sportSprite.setRotation(-180);
+
+        pediddleSprite = new Sprite(pediddleCar);
+        pediddleSprite.setSize(120, 120);
+        pediddleSprite.setOrigin(0,0);
+        pediddleSprite.setRotation(-180);
 
         taxiSprite = new Sprite(taxiImage);
         taxiSprite.setSize(120, 120);

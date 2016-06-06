@@ -218,6 +218,29 @@ public class PediddleMain extends ApplicationAdapter {
 
 				batch.end();
 
+				//If phone is raised then check if pediddle
+				accelZ = Gdx.input.getAccelerometerZ();
+				int tempScore = 0;
+				if(accelZ < -5){
+					Gdx.app.log("ACCELZ", "Is below -5");
+					for(Car car: leftLaneArray){
+						Gdx.app.log("ACCELZ", "checking car");
+						if(car.isPediddle()){
+							Gdx.app.log("ACCELZ", "add to score");
+							tempScore++;
+						}
+					}
+					Gdx.app.log("ACCELZ", "finished check");
+					if(tempScore == 0){
+						Gdx.app.log("ACCELZ", "score sub = " + score);
+						score --;
+					}else{
+						Gdx.app.log("ACCELZ", "score add");
+						score += tempScore;
+					}
+				}
+
+
 				//main car movement
 				if(Gdx.input.isTouched()){
 					Vector3 touchPos = new Vector3();
@@ -394,8 +417,12 @@ public class PediddleMain extends ApplicationAdapter {
 		//set Image for car
 		double randResult = Math.random();
 		if(randResult <= 0.3){
+			car.setCarSprite(Assets.pediddleSprite);
+			car.setPediddle(true);
+		}
+		else if(randResult > 0.3 && randResult <= 0.6){
 			car.setCarSprite(Assets.sportSprite);
-		}else if(randResult > 0.3 && randResult <= 0.7){
+		}else if(randResult > 0.6 && randResult <= 0.8){
 			car.setCarSprite(Assets.truckSprite);
 		}else{
 			car.setCarSprite(Assets.ambulanceSprite);
