@@ -48,6 +48,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 	private CustomButton mCustomButton;
 	private CustomButton mStartButton;
+	private CustomButton mResetScoreButton;
 
 	//State keeps track of current game state
 	private State state;
@@ -77,6 +78,7 @@ public class PediddleMain extends ApplicationAdapter {
 		//Buttons
 		mCustomButton = new CustomButton(Assets.restartButtonImage, 350, 240, 120, 50);
 		mStartButton = new CustomButton(Assets.startButtonImage, 350, 240, 120, 50);
+		mResetScoreButton = new CustomButton(Assets.resetScoreButtonImage, 620, 50, 120, 50);
 
 		//create Car holder
 		rightLaneArray = new ArrayList<Car>();
@@ -145,6 +147,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 				batch.draw(Assets.startScreen, 0, 0);
 				mStartButton.update(batch);
+				mResetScoreButton.update(batch);
 				font.draw(batch, "Longest Time: " + Settings.longestTime + " Seconds" , 10, 100);
 				font.draw(batch, "High Score: " + Settings.highScore + " Pediddles" , 10, 60);
 
@@ -155,6 +158,8 @@ public class PediddleMain extends ApplicationAdapter {
 					Vector3 touchPos = new Vector3();
 					touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 					camera.unproject(touchPos);
+
+					//Start Game
 					if(mStartButton.checkIfClicked(touchPos.x, touchPos.y)){
 						Assets.drivingMusic.play();
 						score = 0;
@@ -164,6 +169,13 @@ public class PediddleMain extends ApplicationAdapter {
 						spawnRightLane();
 						startTime = System.currentTimeMillis();
 						state = state.RUN;
+					}
+
+					//Reset Score
+					if(mResetScoreButton.checkIfClicked(touchPos.x, touchPos.y)){
+						Settings.highScore = 0;
+						Settings.longestTime = 0;
+						Settings.save();
 					}
 				}
 				break;

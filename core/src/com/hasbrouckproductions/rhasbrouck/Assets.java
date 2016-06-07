@@ -43,6 +43,7 @@ public class Assets {
 
     public static Texture startButtonImage;
     public static Texture restartButtonImage;
+    public static Texture resetScoreButtonImage;
 
     public static Texture loadTexture(String file){
         return new Texture(Gdx.files.internal(file));
@@ -95,10 +96,10 @@ public class Assets {
 
         roadSprite = new Sprite(roadImage);
 
-        //Restart Button
+        //Buttons
         restartButtonImage = new Texture(Gdx.files.internal("startbutton2.png"));
-
         startButtonImage = new Texture(Gdx.files.internal("startbutton2.png"));
+        resetScoreButtonImage = new Texture(Gdx.files.internal("resetScoreButton.png"));
 
         //load car sound
         drivingMusic = Gdx.audio.newMusic(Gdx.files.internal("driving_sound.mp3"));
