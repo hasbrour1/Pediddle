@@ -94,7 +94,7 @@ public class PediddleMain extends ApplicationAdapter {
 
 		//Config main car
 		mainCar = new Rectangle();
-		mainCar.x = 800/2 - 64 / 2;
+		mainCar.x = 500;
 		mainCar.y = 40;
 		mainCar.width = 60;
 		mainCar.height = 120;
