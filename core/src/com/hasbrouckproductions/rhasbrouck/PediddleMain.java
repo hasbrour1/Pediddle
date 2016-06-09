@@ -56,6 +56,9 @@ public class PediddleMain extends ApplicationAdapter {
 	//Score for how many pediddles
 	private int score;
 
+	//Ajusts speed of cards
+	private double speedModifier;
+
 	//keeps track of elapsed time
 	private long startTime;
 	private long estimatedTime;
@@ -103,6 +106,8 @@ public class PediddleMain extends ApplicationAdapter {
 		font = new BitmapFont(Gdx.files.internal("pediddle.fnt"),
 				Gdx.files.internal("pediddle.png"), false);
 
+		speedModifier = 1;
+
 		//Start game
 		state = State.START;
 	}
@@ -128,6 +133,7 @@ public class PediddleMain extends ApplicationAdapter {
 		score = 0;
 		startTime = System.currentTimeMillis();
 		lastPediddle = TimeUtils.nanoTime();
+		speedModifier = 1;
 		state = State.RUN;
 	}
 
@@ -284,7 +290,7 @@ public class PediddleMain extends ApplicationAdapter {
 				Iterator<Rectangle> iter = roads.iterator();
 				while(iter.hasNext()){
 					Rectangle road = iter.next();
-					road.y -= 200 * Gdx.graphics.getDeltaTime();
+					road.y -= 200 * Gdx.graphics.getDeltaTime() * speedModifier;
 					if(road.y + 601 < 0){
 						iter.remove();
 					}
@@ -293,7 +299,7 @@ public class PediddleMain extends ApplicationAdapter {
 				Iterator<Rectangle> iter2 = roads2.iterator();
 				while(iter2.hasNext()){
 					Rectangle road = iter2.next();
-					road.y -= 200 * Gdx.graphics.getDeltaTime();
+					road.y -= 200 * Gdx.graphics.getDeltaTime() * speedModifier;
 					if(road.y + 601 < 0){
 						iter2.remove();
 					}
@@ -302,14 +308,14 @@ public class PediddleMain extends ApplicationAdapter {
 				Iterator<Car> iter3 = leftLaneArray.iterator();
 				while(iter3.hasNext()){
 					Rectangle car = iter3.next();
-					car.y -= 300 *(Gdx.graphics.getDeltaTime());
+					car.y -= 300 *(Gdx.graphics.getDeltaTime()) * speedModifier;
 					if(car.y + 200 < 0)iter3.remove();
 				}
 
 				Iterator<Car> iter4 = rightLaneArray.iterator();
 				while(iter4.hasNext()){
 					Car car = iter4.next();
-					car.y -= 250 * (Gdx.graphics.getDeltaTime());
+					car.y -= 250 * (Gdx.graphics.getDeltaTime()) * speedModifier;
 					if(car.y + 200 < 0)iter4.remove();
 					if(car.overlaps(mainCar)){
 						//crash
@@ -320,6 +326,14 @@ public class PediddleMain extends ApplicationAdapter {
 					}
 				}
 
+				//After some time car speeds up
+				//according to speedModifier
+				if(estimatedTime == 50)
+					speedModifier = 1.4;
+				if(estimatedTime == 100)
+					speedModifier = 1.7;
+				if(estimatedTime == 150)
+					speedModifier = 2;
 
 				break;
 			case CRASH:
