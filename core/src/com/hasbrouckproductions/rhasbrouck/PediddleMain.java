@@ -154,6 +154,11 @@ public class PediddleMain extends ApplicationAdapter {
 				batch.draw(Assets.startScreen, 0, 0);
 				mStartButton.update(batch);
 				mResetScoreButton.update(batch);
+				font.draw(batch, "Directions: Move car", 10, 360);
+				font.draw(batch, "by touching screen.", 10, 320);
+				font.draw(batch, "When you see a car", 10, 280);
+				font.draw(batch, " with a head light", 10, 240);
+				font.draw(batch, " out, raise phone for a point.", 10, 200);
 				font.draw(batch, "Longest Time: " + Settings.longestTime + " Seconds" , 10, 100);
 				font.draw(batch, "High Score: " + Settings.highScore + " Pediddles" , 10, 60);
 
@@ -187,20 +192,20 @@ public class PediddleMain extends ApplicationAdapter {
 				break;
 
 			case RUN:
-				//render car
 				Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 				camera.update();
 
-				//use coodinate system defined in camera
+				//use coordinate system defined in camera
 				batch.setProjectionMatrix(camera.combined);
 
-				//start rendering opjects
+				//start rendering objects
 				batch.begin();
 
 				//Draw Roads and Cars
 				batch.draw(Assets.customRoad, 0, 0);
+
 				for(Rectangle road: roads){
 					Assets.roadSprite.setX(road.x);
 					Assets.roadSprite.setY(road.y);
@@ -215,7 +220,7 @@ public class PediddleMain extends ApplicationAdapter {
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
 					car.getCarSprite().draw(batch);
-				}//change this to cars
+				}
 				for(Car car: rightLaneArray){
 					car.getCarSprite().setX(car.getX());
 					car.getCarSprite().setY(car.getY());
